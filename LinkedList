@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node{
+    int data;
+    struct Node *next;
+};
+
+
+// To Insert a node after K
+int InsertNodeAfter(struct Node **a, int val, int k){
+    struct Node *new = (struct Node *)malloc(sizeof(struct Node));
+    new->data=val;
+    new->next=NULL;
+    struct Node *temp = *a;
+    while (temp!=NULL && temp->data!=k){
+        temp = temp->next;
+    }
+    if (temp!=NULL){
+        new->next=temp->next;
+        temp->next=new;
+    }
+    else{
+        if (*a==NULL){
+            *a=new;
+        }
+        else{
+            temp=*a;
+            while (temp->next!=NULL){
+                temp = temp->next;
+            }
+            temp->next=new;
+        }
+    }
+}
+
+// To Insert a node before K
+int InsertNodeBefore(struct Node **a, int val, int k){
+    struct Node *new = (struct Node *)malloc(sizeof(struct Node));
+    new->data=val;
+    new->next=NULL;
+    struct Node *temp = *a;
+
+    if ((*a)==NULL || (*a)->data==k){
+        new->next=*a;
+        *a=new;
+    }
+
+    while (temp->next!=NULL && temp->next->data!=k){
+        temp = temp->next;
+    }
+
+    if (temp->next!=NULL){
+        new->next=temp->next;
+        temp->next=new;
+    }
+    else{
+        temp->next=new;
+    }
+}
+
+// To Delete the head
+void DelBegin(struct Node **a){
+    if (*a==NULL){return;}
+    *a = (*a)->next;
+}
+
+// To Delete the Tail
+void DelEnd(struct Node **a){
+    if (*a==NULL){return;}
+    if ((*a)->next==NULL){
+        free(*a);
+        *a=NULL;
+        return ;
+    }
+    struct Node *temp = *a;
+    while (temp->next->next!=NULL){
+        temp = temp->next;
+    }
+    free(temp->next);
+    temp->next = NULL;
+}
+
+// To Delete the node with value of K
+void DelVal(struct Node **a, int k){
+    struct Node *temp = *a;
+    while (temp->next->data!=k){
+        temp = temp->next;
+    }
+    temp->next=temp->next->next;
+}
+
+// Print the entire Linked List
+void PrintList(struct Node **a){
+    struct Node *temp = *a;
+    while (temp!=NULL){
+        printf("%d -> ",temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main(){
+    struct Node *head = NULL;
+    InsertNodeAfter(&head, 10, 0);
+    InsertNodeAfter(&head, 20, 10);
+    InsertNodeAfter(&head, 30, 20);
+    InsertNodeAfter(&head, 40, 30);
+    InsertNodeAfter(&head, 50, 40);
+    printf("After adding these: ");
+    PrintList(&head);
+    printf("\n");
+    printf("Deleting the head: ");
+    DelBegin(&head);
+    PrintList(&head);
+    printf("\n");
+    printf("Deleting the tail: ");
+    DelEnd(&head);
+    PrintList(&head);
+    printf("\n");
+    printf("Deleting the value: ");
+    DelVal(&head,30);
+    PrintList(&head);
+    printf("\n");
+    printf("Inserting the value before k: ");
+    InsertNodeBefore(&head,30,40);
+    PrintList(&head);
+    printf("\n");
+    return 0;
+}
